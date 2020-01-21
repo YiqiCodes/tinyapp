@@ -56,13 +56,19 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL]
   };
+
   res.render("urls_show", templateVars);
 });
 
-app.get("/u/:shortURL/", (req, res) => {
+app.get("/u/:shortURL", (req, res) => {
   urlDatabase[req.params.shortURL]
     ? res.redirect(urlDatabase[req.params.shortURL])
-    : res.send(404);
+    : res.status(404).send(`Cannot find URL with ${req.params.shortURL}!`);
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect(/urls/);
 });
 
 app.listen(PORT, () => {
