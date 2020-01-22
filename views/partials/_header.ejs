@@ -18,7 +18,7 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <%if (username === undefined) { %>
+    <%if (user === undefined) { %>
     <form class="form-inline" action="/login" method="POST">
       <div class="form-group mb-2">
         <label for="username" class="text-white">Please Enter Username: </label>
@@ -38,7 +38,7 @@
     <form class="form-inline" action="/logout" method="POST">
       <div class="form-group mb-2">
         <label for="username" class="text-white bg-dark">
-          Logged in as: <%= username %>
+          Logged in as: <%= user.email %>
         </label>
         <button type="submit" class="btn btn-info" style="margin:1em">
           Logout
