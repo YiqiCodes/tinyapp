@@ -55,6 +55,14 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+  if (req.body.email === "" || req.body.password === "") {
+    res.status(400).send(`Please enter valid username & password`);
+    return;
+  } else if (findEmail(req.body.email)) {
+    res.status(400).send("Email already exists, please try another");
+    return;
+  }
+
   let random = generateRandomString();
   users[random] = {
     id: random,
@@ -62,8 +70,14 @@ app.post("/register", (req, res) => {
     password: req.body.password
   };
 
-  if (req.body.email === "" || req.body.password === "") {
-    res.status(404).send(`Please Enter Valid Username & Password`);
+  function findEmail(existingEmail) {
+    for (const emails in users) {
+      if (users[emails].email === existingEmail) {
+        console.log(users[emails]);
+        return true;
+      }
+    }
+    return false;
   }
 
   res.cookie("user_id", users[random].id);
