@@ -6,7 +6,7 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 
 const urlDatabase = {
-  // "9sm5xK": { longURL: "http://www.google.com", userID: "aJ48lW" }
+  "9sm5xK": { longURL: "http://www.google.com", userID: "aJ48lW" }
 };
 
 const users = {
@@ -51,8 +51,13 @@ function checkPassword(username, password) {
 }
 
 function urlsForUser(id) {
-  // which returns the URLs where the userID
-  // is equal to the id of the currently logged in user.
+  let specificURL = {};
+
+  for (const shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id)
+      specificURL[shortURL] = urlDatabase[shortURL];
+  }
+  return specificURL;
 }
 
 app.set("view engine", "ejs");
@@ -64,7 +69,6 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  console.log("inside register");
   if (req.body.email === "" || req.body.password === "") {
     res.status(400).send(`Please enter valid username & password`);
     return;
@@ -90,7 +94,6 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log("inside login");
   if (
     findEmail(req.body.email) &&
     checkPassword(req.body.email, req.body.password)
@@ -115,10 +118,14 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
+  let templateVars = {
+    urls: urlsForUser(req.cookies.user_id),
+    user: users[req.cookies.user_id]
+  };
 
   if (!req.cookies.user_id) {
     res.render("urls_login");
+    return;
   }
 
   res.render("urls_index", templateVars);
@@ -131,7 +138,6 @@ app.post("/urls", (req, res) => {
     userID: req.cookies.user_id
   };
 
-  console.log(urlDatabase);
   res.redirect(`/urls/${random}`);
 });
 
@@ -153,6 +159,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
   if (!req.cookies.user_id) {
     res.render("urls_login");
+    return;
   }
   res.render("urls_show", templateVars);
 });

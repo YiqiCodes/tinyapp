@@ -16,30 +16,35 @@
     />
   </head>
   <body>
-    <main style="justify-content: left; width: 1200px; margin: 15em;">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark text-white">      
+    <main style="justify-content: left; width: 1200px; padding-top: 10px; margin: 15em;">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark text-white">  
           <h3>TinyURL - It's What's Happening.</h3>
-          <div class="form-group mb-2"></div>
-            <label for="register" style="margin-left: 10em; margin-top: 5em; margin-bottom: 5em;
-            ">Login Now:</label>
-      <form class="form-inline" action="/login" method="POST">  
-          <input
-            class="form-control"
-            type="text"
-            name="email"
-            placeholder="enter email"
-            style="width: 150px; margin: 0.5em"
-          />
-          <input
-            class="form-control"
-            type="text"
-            name="password"
-            placeholder="enter password"
-            style="width: 150px; margin: 0.5em"
-          />
-          <button type="submit" style="margin: 0.5em" class="btn btn-info">Login Now:</button>
-        </div>
+          <div>
+
+            <form class="form-inline" action="/login" method="POST"> 
+              <label for="register" >Login Now:</label>
+              <input
+              class="form-control"
+              type="text"
+              name="email"
+              placeholder="enter email"
+              style="width: 150px; margin: 0.5em"
+              />
+              <input
+              class="form-control"
+              type="text"
+              name="password"
+              placeholder="enter password"
+              style="width: 150px; margin: 0.5em"
+              />
+              <button type="submit" style="margin: 0.5em" class="btn btn-info">Login Now:</button>  
+              <label for="register" 
+              ">Not A User?:</label>
+              <a href = "/register" style="margin: 0.5em" class="btn btn-primary">Register:</a>
+              
+            </div></div>
       </form>
+    </div> 
     </main>
     <!-- Bootstrap JS -->
     <script
