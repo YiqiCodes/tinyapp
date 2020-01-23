@@ -6,8 +6,7 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 
 const urlDatabase = {
-  b2xVn2: "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "9sm5xK": { longURL: "http://www.google.com", userID: "aJ48lW" }
 };
 
 const users = {
@@ -110,14 +109,17 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
-
   res.render("urls_index", templateVars);
 });
 
 app.post("/urls", (req, res) => {
   let random = generateRandomString();
-  urlDatabase[random] = req.body.longURL;
+  urlDatabase[random] = {
+    longURL: req.body.longURL,
+    userID: req.cookies.user_id
+  };
 
+  console.log(urlDatabase);
   res.redirect(`/urls/${random}`);
 });
 
@@ -148,7 +150,7 @@ app.post("/urls/:shortURL", (req, res) => {
 //redirects to longurl (website) or prints 404 error
 app.get("/u/:shortURL", (req, res) => {
   urlDatabase[req.params.shortURL]
-    ? res.redirect(urlDatabase[req.params.shortURL])
+    ? res.redirect(urlDatabase[req.params.shortURL].longURL)
     : res.status(404).send(`Cannot find URL with ${req.params.shortURL}!`);
 });
 
