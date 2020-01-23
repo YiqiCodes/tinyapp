@@ -6,20 +6,20 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 
 const urlDatabase = {
-  "9sm5xK": { longURL: "http://www.google.com", userID: "aJ48lW" }
+  // "9sm5xK": { longURL: "http://www.google.com", userID: "aJ48lW" }
 };
 
 const users = {
-  // userRandomID: {
-  //   id: "userRandomID",
-  //   email: "user@example.com",
-  //   password: "purple-monkey-dinosaur"
-  // },
-  // user2RandomID: {
-  //   id: "user2RandomID",
-  //   email: "user2@example.com",
-  //   password: "dishwasher-funk"
-  // }
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
 };
 
 function generateRandomString() {
@@ -50,6 +50,11 @@ function checkPassword(username, password) {
   return false;
 }
 
+function urlsForUser(id) {
+  // which returns the URLs where the userID
+  // is equal to the id of the currently logged in user.
+}
+
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -59,6 +64,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+  console.log("inside register");
   if (req.body.email === "" || req.body.password === "") {
     res.status(400).send(`Please enter valid username & password`);
     return;
@@ -84,6 +90,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+  console.log("inside login");
   if (
     findEmail(req.body.email) &&
     checkPassword(req.body.email, req.body.password)
@@ -109,6 +116,11 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
+
+  if (!req.cookies.user_id) {
+    res.render("urls_login");
+  }
+
   res.render("urls_index", templateVars);
 });
 
@@ -138,12 +150,16 @@ app.get("/urls/:shortURL", (req, res) => {
     longURL: urlDatabase[req.params.shortURL],
     user: users[req.cookies.user_id]
   };
+
+  if (!req.cookies.user_id) {
+    res.render("urls_login");
+  }
   res.render("urls_show", templateVars);
 });
 
 // redirects to shortURL on EDIT click
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect("/urls/");
 });
 
