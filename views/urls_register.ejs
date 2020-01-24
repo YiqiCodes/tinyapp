@@ -23,7 +23,7 @@
             <h5><%= message %></h5>
           <% } %>
           <div class="form-group mb-2"></div>
-            <label for="register" style="margin-left: 10em; margin-top: 5em; margin-bottom: 5em;
+            <label for="register" style="margin-top: 5em; margin-bottom: 5em;
             ">Register Now:</label>
       <form class="form-inline" action="/register" method="POST">
           <input
@@ -41,6 +41,8 @@
             style="width: 150px; margin: 0.5em"
           />
           <button type="submit" style="margin: 0.5em" class="btn btn-primary">Register</button>
+          <label for="register" 
+          ">Existing User?:</label>
           <a href = "/login" style="margin: 0.5em" class="btn btn-info">To Login</a>
         </div>
       </form>
