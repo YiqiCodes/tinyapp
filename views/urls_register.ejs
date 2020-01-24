@@ -19,6 +19,9 @@
     <main style="justify-content: left; width: 1200px; margin: 15em;">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark text-white">      
           <h3>TinyURL - It's What's Happening.</h3>
+          <% if (error) { %>
+            <h5><%= message %></h5>
+          <% } %>
           <div class="form-group mb-2"></div>
             <label for="register" style="margin-left: 10em; margin-top: 5em; margin-bottom: 5em;
             ">Register Now:</label>
@@ -32,7 +35,7 @@
           />
           <input
             class="form-control"
-            type="text"
+            type="password"
             name="password"
             placeholder="enter password"
             style="width: 150px; margin: 0.5em"

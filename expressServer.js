@@ -72,16 +72,28 @@ function urlsForUser(id) {
   return specificURL;
 }
 
+function getUserByEmail(email, database) {
+  return user;
+}
+
 app.get("/register", (req, res) => {
-  res.render("urls_register.ejs");
+  res.render("urls_register.ejs", { error: false, message: null });
 });
 
 app.post("/register", (req, res) => {
   if (req.body.email === "" || req.body.password === "") {
-    res.status(400).send(`Please enter valid username & password`);
+    res.status(400).render("urls_register.ejs", {
+      error: true,
+      message: "Please enter both an email and password"
+    });
     return;
   } else if (findEmail(req.body.email)) {
-    res.status(400).send("Email already exists, please try another");
+    res
+      .status(400)
+      .render("urls_register.ejs", {
+        error: true,
+        message: "Email already exists"
+      });
     return;
   }
 
