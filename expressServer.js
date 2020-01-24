@@ -72,10 +72,6 @@ function urlsForUser(id) {
   return specificURL;
 }
 
-function getUserByEmail(email, database) {
-  return user;
-}
-
 app.get("/register", (req, res) => {
   res.render("urls_register.ejs", { error: false, message: null });
 });
@@ -84,16 +80,14 @@ app.post("/register", (req, res) => {
   if (req.body.email === "" || req.body.password === "") {
     res.status(400).render("urls_register.ejs", {
       error: true,
-      message: "Please enter both an email and password"
+      message: "Please enter valid email and password"
     });
     return;
   } else if (findEmail(req.body.email)) {
-    res
-      .status(400)
-      .render("urls_register.ejs", {
-        error: true,
-        message: "Email already exists"
-      });
+    res.status(400).render("urls_register.ejs", {
+      error: true,
+      message: "Email already exists, please try again"
+    });
     return;
   }
 
@@ -108,7 +102,11 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  let templateVars = { user: users[req.session.user_id] };
+  let templateVars = {
+    user: users[req.session.user_id],
+    error: false,
+    message: null
+  };
   res.render("urls_login", templateVars);
 });
 
@@ -123,10 +121,16 @@ app.post("/login", (req, res) => {
     !checkPassword(req.body.email, req.body.password) &&
     findEmail(req.body.email)
   ) {
-    res.status(403).send("Wrong password, please try again");
+    res.status(403).render("urls_login.ejs", {
+      error: true,
+      message: "Wrong password, please try again"
+    });
     return;
   } else if (!findEmail(req.body.email)) {
-    res.status(403).send("Cannot locate email, please try again");
+    res.status(403).render("urls_login.ejs", {
+      error: true,
+      message: "Cannot locate email, please try again"
+    });
     return;
   }
 });
@@ -139,11 +143,13 @@ app.post("/logout", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlsForUser(req.session.user_id),
-    user: users[req.session.user_id]
+    user: users[req.session.user_id],
+    error: false,
+    message: null
   };
 
   if (!req.session.user_id) {
-    res.render("urls_login");
+    res.render("urls_login", templateVars);
     return;
   }
 
@@ -161,10 +167,14 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  let templateVars = {
+    user: users[req.session.user_id],
+    error: false,
+    message: null
+  };
   if (Object.entries(req.session).length === 0) {
-    res.render("urls_login");
+    res.render("urls_login", templateVars);
   } else {
-    let templateVars = { user: users[req.session.user_id] };
     res.render("urls_new", templateVars);
   }
 });
@@ -173,11 +183,13 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    user: users[req.session.user_id]
+    user: users[req.session.user_id],
+    error: false,
+    message: null
   };
 
   if (!req.session.user_id) {
-    res.render("urls_login");
+    res.render("urls_login", templateVars);
     return;
   }
   res.render("urls_show", templateVars);

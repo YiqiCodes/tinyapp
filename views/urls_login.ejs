@@ -19,6 +19,9 @@
     <main style="justify-content: left; width: 1200px; padding-top: 10px; margin: 15em;">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark text-white">  
           <h3>TinyURL - It's What's Happening.</h3>
+          <% if (error) { %>
+            <h5><%= message %></h5>
+          <% } %>
           <div>
             <form class="form-inline" action="/login" method="POST"> 
               <label for="register" >Login Now:</label>
@@ -36,10 +39,10 @@
               placeholder="enter password"
               style="width: 150px; margin: 0.5em"
               />
-              <button type="submit" style="margin: 0.5em" class="btn btn-info">Login Now:</button>  
+              <button type="submit" style="margin: 0.5em" class="btn btn-info">Login Now</button>  
               <label for="register" 
               ">Not A User?:</label>
-              <a href = "/register" style="margin: 0.5em" class="btn btn-primary">Register:</a>
+              <a href = "/register" style="margin: 0.5em" class="btn btn-primary">Register</a>
               
             </div></div>
       </form>
