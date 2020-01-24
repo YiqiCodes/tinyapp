@@ -14,23 +14,23 @@ app.use(
   })
 );
 
-const urlDatabase = {
-  "9sm5xK": { longURL: "http://www.google.com", userID: "aJ48lW" }
-};
+const urlDatabase = {};
 
+//baseline setup for users with encrypted passwords
 const users = {
   userRandomID: {
     id: "user1",
-    email: "b@b.com",
+    email: "a@a.com",
     password: bcrypt.hashSync("123", 10)
   },
   user2RandomID: {
     id: "user2",
-    email: "a@a.com",
+    email: "b@b.com",
     password: bcrypt.hashSync("123", 10)
   }
 };
 
+// generates random shortURL
 function generateRandomString() {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVabcdefghijklmnopqrstuv";
@@ -41,6 +41,7 @@ function generateRandomString() {
   return result;
 }
 
+//check if existing email is valid
 function findEmail(existingEmail) {
   for (const emails in users) {
     if (users[emails].email === existingEmail) {
@@ -50,6 +51,7 @@ function findEmail(existingEmail) {
   return false;
 }
 
+//check if username and password are valid
 function checkPassword(username, password) {
   for (const key in users) {
     if (
@@ -62,6 +64,7 @@ function checkPassword(username, password) {
   return false;
 }
 
+// function for displaying only relevant shortURLs for current user
 function urlsForUser(id) {
   let specificURL = {};
 
@@ -72,10 +75,15 @@ function urlsForUser(id) {
   return specificURL;
 }
 
+app.get("/", (req, res) => {
+  res.render("urls_register.ejs", { error: false, message: null });
+});
+
 app.get("/register", (req, res) => {
   res.render("urls_register.ejs", { error: false, message: null });
 });
 
+// on register, checks for error, allows entry if no error, otherwise display error
 app.post("/register", (req, res) => {
   if (req.body.email === "" || req.body.password === "") {
     res.status(400).render("urls_register.ejs", {
@@ -110,6 +118,7 @@ app.get("/login", (req, res) => {
   res.render("urls_login", templateVars);
 });
 
+// on login, checks for error, allows entry if no error, otherwise display error
 app.post("/login", (req, res) => {
   if (
     findEmail(req.body.email) &&
@@ -135,6 +144,7 @@ app.post("/login", (req, res) => {
   }
 });
 
+//clears cookies on logout and redirects to homepage
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect(`/urls`);
@@ -156,6 +166,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// adds to database everytime url is created
 app.post("/urls", (req, res) => {
   let random = generateRandomString();
   urlDatabase[random] = {
@@ -166,6 +177,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${random}`);
 });
 
+// goes to login page if no cookies exist on creating new url
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: users[req.session.user_id],
