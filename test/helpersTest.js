@@ -29,5 +29,12 @@ describe("getUserByEmail", function() {
   it("should return a user with valid email", function() {
     const user = findEmailTest("user@example.com", testUsers);
     const expectedOutput = "userRandomID";
+    assert.equal(user, expectedOutput);
+  });
+
+  it("should return undefined with non-existent email", function() {
+    const user = findEmailTest("user3@example.com", testUsers);
+    const expectedOutput = undefined;
+    assert.equal(user, expectedOutput);
   });
 });
