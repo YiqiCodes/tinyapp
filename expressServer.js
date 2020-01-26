@@ -33,7 +33,7 @@ app.get("/register", (req, res) => {
 
 // on register, checks for error, allows entry if no error, otherwise display error
 app.post("/register", (req, res) => {
-  if (req.body.email === "" || req.body.password === "") {
+  if (!req.body.email || !req.body.password) {
     res.status(400).render("urls_register.ejs", {
       error: true,
       message: "Please enter valid email and password"
@@ -132,8 +132,9 @@ app.get("/urls/new", (req, res) => {
     error: false,
     message: null
   };
-  if (Object.entries(req.session).length === 0) {
+  if (!req.session.user_id) {
     res.render("urls_login", templateVars);
+    return;
   } else {
     res.render("urls_new", templateVars);
   }
